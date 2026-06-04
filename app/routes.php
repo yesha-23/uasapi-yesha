@@ -36,91 +36,90 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
 
-    // // ===== CRUD GUDANG =====
-    // // CREATE
-    // $app->post('/api/gudang', function (Request $request, Response $response) {
-    //     $db = $this->get('db');
-    //     $data = $request->getParsedBody();
-    //     $id = $db->table('gudang')->insertGetId([
-    //         'nama_gudang' => $data['nama_gudang'],
-    //         'lokasi' => $data['lokasi'],
-    //         'kapasitas_maksimal' => $data['kapasitas_maksimal'],
-    //     ]);
-    //     $result = $db->table('gudang')->where('id', $id)->first();
-    //     $response->getBody()->write(json_encode([
-    //         'status' => 'success',
-    //         'message' => 'Gudang berhasil ditambahkan',
-    //         'data' => $result
-    //     ]));
-    //     return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
-    // })->add(new JwtMiddleware());
+    // ===== CRUD GUDANG =====
+    // CREATE
+    $app->post('/api/gudang', function (Request $request, Response $response) {
+        $db = $this->get('db');
+        $data = $request->getParsedBody();
+        $id = $db->table('gudang')->insertGetId([
+            'nama_gudang' => $data['nama_gudang'],
+            'lokasi' => $data['lokasi'],
+            'kapasitas_maksimal' => $data['kapasitas_maksimal'],
+        ]);
+        $result = $db->table('gudang')->where('id', $id)->first();
+        $response->getBody()->write(json_encode([
+            'status' => 'success',
+            'message' => 'Gudang berhasil ditambahkan',
+            'data' => $result
+        ]));
+        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+    })->add(new JwtMiddleware());
 
     
 
-    // // READ
-    // $app->get('/api/gudang', function (Request $request, Response $response) {
-    //     $db = $this->get('db');
-    //     $gudangs = $db->table('gudang')->get();
+    // READ
+    $app->get('/api/gudang', function (Request $request, Response $response) {
+        $db = $this->get('db');
+        $gudangs = $db->table('gudang')->get();
 
-    //     $result = [];
-    //     foreach ($gudangs as $gudang) {
-    //         $barangs = $db->table('barang')->where('gudang_id', $gudang->id)->get();
-    //         $daftarBarang = [];
-    //         foreach ($barangs as $barang) {
-    //             $kategori = $db->table('kategori')->where('id', $barang->kategori_id)->first();
-    //             $daftarBarang[] = [
-    //                 'id' => $barang->id,
-    //                 'nama_barang' => $barang->nama_barang,
-    //                 'sku' => $barang->sku,
-    //                 'stok' => $barang->stok,
-    //                 'detail_kategori' => [
-    //                     'id' => $kategori->id,
-    //                     'nama_kategori' => $kategori->nama_kategori
-    //                 ]
-    //             ];
-    //         }
-    //         $result[] = [
-    //             'id' => $gudang->id,
-    //             'nama_gudang' => $gudang->nama_gudang,
-    //             'lokasi' => $gudang->lokasi,
-    //             'kapasitas_maksimal' => $gudang->kapasitas_maksimal,
-    //             'daftar_barang' => $daftarBarang
-    //         ];
-    //     }
+        $result = [];
+        foreach ($gudangs as $gudang) {
+            $barangs = $db->table('barang')->where('gudang_id', $gudang->id)->get();
+            $daftarBarang = [];
+            foreach ($barangs as $barang) {
+                $kategori = $db->table('kategori')->where('id', $barang->kategori_id)->first();
+                $daftarBarang[] = [
+                    'id' => $barang->id,
+                    'nama_barang' => $barang->nama_barang,
+                    'sku' => $barang->sku,
+                    'stok' => $barang->stok,
+                    'detail_kategori' => [
+                        'id' => $kategori->id,
+                        'nama_kategori' => $kategori->nama_kategori
+                    ]
+                ];
+            }
+            $result[] = [
+                'id' => $gudang->id,
+                'nama_gudang' => $gudang->nama_gudang,
+                'lokasi' => $gudang->lokasi,
+                'kapasitas_maksimal' => $gudang->kapasitas_maksimal,
+                'daftar_barang' => $daftarBarang
+            ];
+        }
 
-    //     $response->getBody()->write(json_encode([
-    //         'status' => 'success',
-    //         'data' => $result
-    //     ]));
-    //     return $response->withHeader('Content-Type', 'application/json');
-    // })->add(new JwtMiddleware());
+        $response->getBody()->write(json_encode([
+            'status' => 'success',
+            'data' => $result
+        ]));
+        return $response->withHeader('Content-Type', 'application/json');
+    })->add(new JwtMiddleware());
 
-    // // UPDATE
-    // $app->put('/api/gudang/{id}', function (Request $request, Response $response, $args) {
-    //     $db = $this->get('db');
-    //     $data = $request->getParsedBody();
-    //     $db->table('gudang')->where('id', $args['id'])->update([
-    //         'nama_gudang' => $data['nama_gudang'],
-    //         'lokasi' => $data['lokasi'],
-    //         'kapasitas_maksimal' => $data['kapasitas_maksimal'],
-    //     ]);
-    //     $response->getBody()->write(json_encode([
-    //         'status' => 'success',
-    //         'message' => 'Data gudang dengan ID ' . $args['id'] . ' berhasil diperbarui'
-    //     ]));
-    //     return $response->withHeader('Content-Type', 'application/json');
-    // })->add(new JwtMiddleware());
+    // UPDATE
+    $app->put('/api/gudang/{id}', function (Request $request, Response $response, $args) {
+        $db = $this->get('db');
+        $data = $request->getParsedBody();
+        $db->table('gudang')->where('id', $args['id'])->update([
+            'nama_gudang' => $data['nama_gudang'],
+            'lokasi' => $data['lokasi'],
+            'kapasitas_maksimal' => $data['kapasitas_maksimal'],
+        ]);
+        $response->getBody()->write(json_encode([
+            'status' => 'success',
+            'message' => 'Data gudang dengan ID ' . $args['id'] . ' berhasil diperbarui'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json');
+    })->add(new JwtMiddleware());
 
-    // // DELETE
-    // $app->delete('/api/gudang/{id}', function (Request $request, Response $response, $args) {
-    //     $db = $this->get('db');
-    //     $db->table('gudang')->where('id', $args['id'])->delete();
-    //     $response->getBody()->write(json_encode([
-    //         'status' => 'success',
-    //         'message' => 'Gudang dengan ID ' . $args['id'] . ' telah dihapus'
-    //     ]));
-    //     return $response->withHeader('Content-Type', 'application/json');
-    // })->add(new JwtMiddleware());
+    // DELETE
+    $app->delete('/api/gudang/{id}', function (Request $request, Response $response, $args) {
+        $db = $this->get('db');
+        $db->table('gudang')->where('id', $args['id'])->delete();
+        $response->getBody()->write(json_encode([
+            'status' => 'success',
+            'message' => 'Gudang dengan ID ' . $args['id'] . ' telah dihapus'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json');})->add(new JwtMiddleware());
 
 // ================================ UAS RESTFUL API ====================================
 //=== CREATE KEHADIRAN (POST) ===

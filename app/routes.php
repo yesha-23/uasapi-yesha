@@ -55,8 +55,6 @@ return function (App $app) {
         return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     })->add(new JwtMiddleware());
 
-    
-
     // READ
     $app->get('/api/gudang', function (Request $request, Response $response) {
         $db = $this->get('db');
@@ -123,7 +121,7 @@ return function (App $app) {
 
 // ================================ UAS RESTFUL API ====================================
 //=== CREATE KEHADIRAN (POST) ===
-$app->post('api/pegawai', function (Request $request, Response $response) {
+$app->post('/api/pegawai', function (Request $request, Response $response) {
     $db = $this->get('db');
     $data = $request->getParsedBody();
     $id = $db->table('pegawai')->insertGetId([
@@ -134,14 +132,14 @@ $app->post('api/pegawai', function (Request $request, Response $response) {
     $result = $db->table('pegawai')->where('id', $id)->first();
     $response->getBody()->write(json_encode([
         'status' => 'success',
-        'message' => 'Kehadiran pegawai berhasil dicatat!',
+        'message' => 'Pegawai berhasil ditambahkan',
         'data' => $result
     ]));
     return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     })->add(new JwtMiddleware());
 
 // ==== READ PEGAWAI (GET) ====
-    $app->get('api/pegawai', function (Request $request, Response $response) {
+    $app->get('/api/pegawai', function (Request $request, Response $response) {
         $db = $this->get('db');
         $pegawais = $db->table('pegawai')->get();
         $result = [];
